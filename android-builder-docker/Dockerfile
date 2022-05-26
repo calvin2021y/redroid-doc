@@ -24,16 +24,13 @@ RUN apt-get update \
     && apt-get install -y python2 python-mako python-is-python2 python-enum34 gettext
 
 
-RUN groupadd -g $groupid $username \
-    && useradd -m -u $userid -g $groupid $username \
-    && echo "$username ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers \
-    && echo $username >/root/username \
-    && echo "$username:$username" | chpasswd && adduser $username sudo
+RUN echo $username >/root/username \
 
 
-ENV HOME=/home/$username \
-    USER=$username \
+ENV HOME=/root \
+    USER=root \
+    OUT_DIR_COMMON_BASE=/src/builds \
     PATH=/src/.repo/repo:/src/prebuilts/jdk/jdk8/linux-x86/bin/:$PATH
 
 
-ENTRYPOINT chroot --userspec=$(cat /root/username):$(cat /root/username) / /bin/bash -i
+ENTRYPOINT /bin/bash -i
