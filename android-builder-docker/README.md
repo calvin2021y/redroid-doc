@@ -25,13 +25,10 @@ repo sync -c
 ```bash
 # create builder docker image (ubuntu 20.04)
 # adjust apt.conf and source.list if needed
-docker build --build-arg userid=$(id -u) --build-arg groupid=$(id -g) --build-arg username=$(id -un) -t redroid-builder .
-
-# OR ubuntu 14.04 (old mesa3d release)
-docker build --build-arg userid=$(id -u) --build-arg groupid=$(id -g) --build-arg username=$(id -un) -t redroid-builder -f Dockerfile.1404 .
+docker build --network=host --build-arg userid=$(id -u) --build-arg groupid=$(id -g) --build-arg username=$(id -un) -t redroid-builder .
 
 # start builder
-docker run -it --rm --hostname redroid-builder --name redroid-builder -v <AOSP-SRC>:/src redroid-builder
+docker run --network=host -it --rm --hostname redroid-builder --name redroid-builder -v <AOSP-SRC>:/src redroid-builder
 
 # *inside* builder container
 cd /src
